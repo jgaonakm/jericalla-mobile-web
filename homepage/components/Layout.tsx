@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import Image from 'next/image'
+import logo from '../public/images/logo4-2.png'
 
 export default function Layout({ children }: { children: React.ReactNode } ) {
   const whereIAm = process.env.NEXT_PUBLIC_WHEREIAM  
@@ -9,7 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode } ) {
       <nav className="navbar navbar-expand-lg navbar-dark tint-90">
         <div className="container">
           <Link href="/" className="navbar-brand">
-            Jericalla Mobile
+            <Image src={logo} alt="Jericalla Mobile Logo" width={165} height={50} className="d-inline-block align-text-top" />
           </Link>
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav ms-auto">
