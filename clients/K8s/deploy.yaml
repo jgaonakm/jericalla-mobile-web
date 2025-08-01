@@ -1,0 +1,31 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: clients-razor
+  labels:
+    app: clients-razor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clients-razor
+  template:
+    metadata:
+      labels:
+        app: clients-razor
+    spec:
+      containers:
+      - name: clients-razor
+        image: jgaonaakm/jericalla-mobile-razor-clients:1.0.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+          - name: ACCOUNTS_API
+            value: "Akamai"
+          - name: ACCOUNTS_API
+            value: "http://accounts-api"
+          - name: SUPPORT_API
+            value: "http://support-api"
+  

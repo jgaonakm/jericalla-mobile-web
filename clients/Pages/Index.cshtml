@@ -1,0 +1,93 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom px-4">
+    <div class="container-fluid">
+        <h5 class="mb-0">Hola @Model.FullName!</h5>
+    </div>
+</nav>
+<hr/>
+<!-- Content -->
+
+<div class="container">
+    <div class="row dashboard-cards g-4">
+        <div class="col-md-4">
+            <div class="card tint-90">
+                <div class="card-body text-light">
+                    <h5 class="card-title">Línea</h5>
+                    <p class="card-text">[Activa] @string.Format("{0:(###) ###-####}", Convert.ToInt64(Model.Phone))</p>
+                    <p class="card-text">Plan: Minutos Ilimitados</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card tint-90">
+                <div class="card-body text-light">
+                    <h5 class="card-title">Próximo pago</h5>
+                    <p class="card-text">$45.90 (vence el @(DateTime.Today.AddDays(7).ToShortDateString()))</p>
+                    <button class="btn btn-light btn-sm">Pagar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card tint-50">
+                <div class="card-body">
+                    <h5 class="card-title">Datos</h5>
+                    <p class="card-text">Consumidos: @Model.UsageGB GB / @Math.Truncate(Model.UsageGB * 4) GB</p>
+                    <div class="progress">
+                        <div class="progress-bar tint-90" style="width: 25%">25%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card primary">
+                <div class="card-body">
+                    <h5 class="card-title">Minutos</h5>
+                    <p class="card-text">Consumidos: @Model.UsageMinutes / Ilimitados</p>
+                    <div class="progress">
+                        <div class="progress-bar primary" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card secondary-light">
+                <div class="card-body">
+                    <h5 class="card-title">SMS</h5>
+                    <p class="card-text">Used: @Model.UsageSMS / @(Model.UsageSMS * 2) </p>
+                    <div class="progress">
+                        <div class="progress-bar tint-90" style="width: 50%">50%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <h5>Actividad reciente</h5>
+            <ul class="list-group">
+                <li class="list-group-item">@(DateTime.Today.AddDays(-5).ToShortDateString()) Llamada a +1 800 555 0199 - 5 min</li>
+                <li class="list-group-item">@(DateTime.Today.AddDays(-7).ToShortDateString()) SMS enviado a +52 123 456 7890</li>
+                <li class="list-group-item">@(DateTime.Today.AddDays(-7).ToShortDateString()) Inicio de sesión </li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h5>Tickets de soporte</h5>
+            <ul class="list-group">
+                <li class="list-group-item">Ticket #4521 - SIM no funciona (Resuelto)</li>
+                <li class="list-group-item">Ticket #4600 - Problema de roaming (En curso)</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- End Content-->
+</div>

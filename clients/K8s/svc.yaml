@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: clients-razor
+spec: 
+  type: LoadBalancer
+  ports:
+    - name: web
+      port: 80
+      targetPort: http
+  selector:
+    app: clients-razor 
