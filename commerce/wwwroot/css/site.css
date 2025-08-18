@@ -1,0 +1,135 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+
+
+.primary {
+  background-color: rgba(126, 111, 255, 1);
+}
+
+.text-c-primary {
+  color: rgba(126, 111, 255, 1);
+}
+
+.tint-90 {
+  background-color: rgb(29, 27, 53)
+}
+
+.text-c-tint-90 {
+  color: rgb(29, 27, 53)
+}
+
+.tint-75 {
+  background-color: rgba(146, 136, 255, 1)
+}
+
+.tint-50 {
+  background-color: rgba(166, 161, 255, 1)
+}
+
+.tint-25 {
+  background-color: rgba(186, 186, 255, 1)
+}
+
+.secondary-light {
+  background-color: rgba(156, 139, 255, 1);
+}
+
+.secondary-dark {
+  background-color: rgba(72, 62, 179, 1);
+}
+
+.btn-secondary-dark {
+  background-color: rgba(72, 62, 179, 1) !important;
+  border-color: rgba(72, 62, 179, 1) !important;
+  color: white !important;
+}
+
+.form-check-input:checked {
+  background-color: rgba(72, 62, 179, 1) !important;
+  border-color: rgba(72, 62, 179, 1) !important;
+}
+
+label.btn-outline-secondary-dark {
+  border-color: rgba(72, 62, 179, 1);
+  color: rgba(72, 62, 179, 1);
+}
+
+.btn-check:checked+.btn {
+  background-color: rgba(72, 62, 179, 1) !important;
+  border-color: rgba(72, 62, 179, 1) !important;
+  color: white !important;
+}
+
+a.btn-outline-secondary-dark {
+  border-color: rgba(72, 62, 179, 1);
+  color: rgba(72, 62, 179, 1);
+}
+
+a.btn-outline-secondary-dark:hover {
+  background-color: rgba(72, 62, 179, 1);
+  border-color: rgba(72, 62, 179, 1);
+  color: white;
+}
+
+
+.shade-75 {
+  background-color: rgba(101, 90, 204, 1)
+}
+
+.shade-50 {
+  background-color: rgba(76, 68, 153, 1)
+}
+
+.shade-25 {
+  background-color: rgba(51, 45, 102, 1)
+}
+
+.complementary-1 {
+  background-color: rgba(255, 246, 111, 1)
+}
+
+.complementary-2 {
+  background-color: rgba(255, 198, 111, 1)
+}
+
+.analog-1 {
+  background-color: rgba(111, 161, 255, 1)
+}
+
+.analog-2 {
+  background-color: rgba(198, 111, 255, 1)
+}
+
+
+.ternary-1 {
+  background-color: rgba(111, 255, 198, 1)
+}
+
+.ternary-2 {
+  background-color: rgba(255, 126, 111, 1)
+}

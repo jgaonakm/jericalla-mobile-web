@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - commerce</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/commerce.styles.css" asp-append-version="true" />
+</head>
+
+<body>
+    @{
+        var whereIAm = Environment.GetEnvironmentVariable("WHEREIAM") ?? "Unknown";
+    }
+    <div>
+        <nav class="navbar navbar-expand-lg navbar-dark tint-90">
+            <div class="container">
+                <a href="/" class="navbar-brand">
+                    <img src="~/images/logo4-2.png" alt="Jericalla Mobile Logo" width="165" height="50"
+                        class="d-inline-block align-text-top" />
+                </a>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a href="/" class="nav-link">Equipos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/plans" class="nav-link">Planes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/coverage" class="nav-link">Cobertura</a>
+                        </li>
+                    </ul>
+                </div>
+                <a class="btn btn-outline-primary" href="/clients">Mi Cuenta</a>
+            </div>
+        </nav>
+
+        <main class="container py-4">@RenderBody()</main>
+
+        <footer class="bg-light text-center py-3 mt-auto">
+            © 2025 Jericalla Mobile.
+            <p>
+                <span class="badge rounded-pill bg-success fixed-bottom">Hosted @($"@ {whereIAm}")</span>
+            </p>
+        </footer>
+
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+
+        @await RenderSectionAsync("Scripts", required: false)
+    </div>
+</body>
+
+</html>

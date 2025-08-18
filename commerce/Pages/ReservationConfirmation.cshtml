@@ -1,0 +1,96 @@
+﻿@page
+@model ReservationConfirmationModel
+
+<!-- Success Alert after subscribing -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill"></i>
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold text-c-primary">¡Tu reserva ha sido confirmada!</h1>
+        <p class="lead">Gracias por confiar en nosotros. Pronto recibirás un correo con los detalles de tu pedido.</p>
+    </div>
+
+    <!-- Newsletter Invite -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            <div class="p-4 border rounded bg-light">
+                <h4 class="fw-semibold mb-3">Mantente al día</h4>
+                <p>
+                    ¿Quieres enterarte antes que nadie de nuestros <strong>nuevos productos y promociones
+                        exclusivas</strong>?
+                    Suscríbete a nuestro boletín y recibe notificaciones directamente en tu correo.
+                </p>
+                <form method="post" asp-page-handler="Subscribe">
+                    <div class="input-group">
+                        <input type="email" name="Email" class="form-control"
+                            placeholder="Ingresa tu correo electrónico" required />
+                        <button class="btn btn-secondary-dark" type="submit">Suscribirme</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Services CTA -->
+    <h3 class="text-center mb-4">Descubre más servicios que tenemos para ti</h3>
+    <div class="row g-4">
+        <!-- Cloud Storage -->
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Almacenamiento en la nube</h5>
+                    <p class="card-text small">
+                        Guarda tus archivos de manera segura desde cualquier dispositivo.
+                    </p>
+                    <a href="#" class="btn btn-outline-secondary-dark">Conocer más</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Streaming -->
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Entretenimiento</h5>
+                    <p class="card-text small">
+                        Disfruta tus series, música y películas favoritas con paquetes exclusivos.
+                    </p>
+                    <a href="#" class="btn btn-outline-secondary-dark">Ver opciones</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- IoT -->
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Planes IoT</h5>
+                    <p class="card-text small">
+                        Conecta tus dispositivos inteligentes y controla tu hogar o negocio fácilmente.
+                    </p>
+                    <a href="#" class="btn btn-outline-secondary-dark">Explorar IoT</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- GenIA -->
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Planes de GenIA</h5>
+                    <p class="card-text small">
+                        Lleva tu productividad al siguiente nivel con herramientas de IA.
+                    </p>
+                    <a href="#" class="btn btn-outline-secondary-dark">Descubrir más</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

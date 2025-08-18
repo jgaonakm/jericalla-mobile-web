@@ -1,0 +1,28 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: web-commerce
+  labels:
+    app: web-commerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-commerce
+  template:
+    metadata:
+      labels:
+        app: web-commerce
+    spec:
+      containers:
+      - name: web-commerce
+        image: jgaonaakm/jericalla-mobile-web-commerce:1.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+          - name: WHEREIAM
+            value: "Akamai"
+          - name: HUB
+            value: ""

@@ -1,0 +1,303 @@
+﻿@page
+@model ReservationsModel
+@{
+    ViewData["Title"] = "Reserve Your Phone";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom px-4">
+        <div class="container-fluid">
+            <h5 class="mb-0">Reserva tu equipo hoy</h5>
+        </div>
+    </nav>
+    <hr />
+    <form method="post" class="needs-validation" novalidate>
+        @Html.AntiForgeryToken()
+
+        <div class="row g-4">
+            <!-- Plan Type -->
+            <div class="col-4">
+                <label class="form-label fw-semibold">Plan</label>
+                <div class="d-flex gap-2">
+                    <div class="btn-group" role="group" aria-label="Plan type">
+                        <input type="radio" class="btn-check" name="Reservation.PlanType" id="planUnlocked"
+                            value="Unlocked" autocomplete="off" @(Model.Reservation.PlanType == PlanType.Unlocked ?
+                                                                                            "checked" : "")>
+                        <label class="btn btn-outline-secondary-dark" for="planUnlocked">Libre</label>
+
+                        <input type="radio" class="btn-check" name="Reservation.PlanType" id="planContract"
+                            value="Contract24" @(Model.Reservation.PlanType == PlanType.Contract24 ? "checked" : "")>
+                        <label class="btn btn-outline-secondary-dark" for="planContract">Contrato a 24 meses</label>
+                    </div>
+                    <span class="text-danger" asp-validation-for="Reservation.PlanType"></span>
+                </div>
+            </div>
+
+            <!-- Payment -->
+            <div class="col-md-8">
+                <label class="form-label fw-semibold">Pago</label>
+                <div class="d-flex gap-2">
+                    <div class="btn-group" role="group">
+                        <input type="radio" class="btn-check" name="Reservation.PaymentOption" id="paySingle"
+                            value="Single" @(Model.Reservation.PaymentOption == PaymentOption.Single ? "checked" : "")>
+                        <label class="btn btn-outline-secondary-dark" for="paySingle">Único</label>
+
+                        <input type="radio" class="btn-check" name="Reservation.PaymentOption" id="payInstallments"
+                            value="Installments" @(Model.Reservation.PaymentOption == PaymentOption.Installments ?
+                                                                             "checked" : "")>
+                        <label class="btn btn-outline-secondary-dark" for="payInstallments">Contrato</label>
+                    </div>
+                </div>
+
+                @* <div id="installmentsDetails" class="mt-3" style="display:none;">
+                    <label class="form-label">Meses</label>
+                    <select class="form-select" name="Reservation.InstallmentMonths">
+                        <option value="">Select</option>
+                         <option @(Model.Reservation.InstallmentMonths==6?"selected":"")>6</option>
+                        <option @(Model.Reservation.InstallmentMonths==12?"selected":"")>12</option>
+                        <option @(Model.Reservation.InstallmentMonths==18?"selected":"")>18</option>
+                        <option @(Model.Reservation.InstallmentMonths==24?"selected":"")>24</option>
+                    </select>
+                </div> 
+                *@
+            </div>
+        </div>
+        <div class="row g-4 mt-3">
+            <!-- Storage -->
+            <div class="col-md-4">
+                <label asp-for="Reservation.Storage" class="form-label fw-semibold">Almacenamiento</label>
+                @* <select class="form-select" asp-for="Reservation.Storage" asp-items="Model.StorageOptions"></select> *@
+                <div class="d-flex gap-2">
+                    @foreach (var c in Model.StorageOptions)
+                    {
+                        var id = $"storage-{c.Value}";
+                        <input type="radio" class="btn-check" name="Reservation.Storage" id="@id" value="@c.Value"
+                            @(Model.Reservation.Storage == c.Value ? "checked" : "") />
+                        <label class="btn btn-outline-secondary-dark d-flex align-items-center gap-2" for="@id">
+                            @c.Label
+                        </label>
+                    }
+                </div>
+                <span class="text-danger" asp-validation-for="Reservation.Storage"></span>
+            </div>
+
+            <!-- Color -->
+            <div class="col-md-8">
+                <label class="form-label fw-semibold">Color</label>
+                <div class="d-flex gap-2">
+                    @foreach (var c in Model.ColorOptions)
+                    {
+                        var id = $"color-{c.Value}";
+                        <input type="radio" class="btn-check" name="Reservation.Color" id="@id" value="@c.Value"
+                            @(Model.Reservation.Color == c.Value ? "checked" : "") />
+                        <label class="btn btn-outline-secondary d-flex align-items-center gap-2" for="@id">
+                            <span class="d-inline-block rounded-circle"
+                                style="width:18px;height:18px;background:@c.Hex;"></span>
+                            @c.Label
+                        </label>
+                    }
+                </div>
+                <span class="text-danger" asp-validation-for="Reservation.Color"></span>
+            </div>
+        </div>
+        <div class="row g-4 mt-3">
+
+            <!-- Trade-in -->
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Trade-in</label>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="tradeInSwitch" name="Reservation.HasTradeIn"
+                        @(Model.Reservation.HasTradeIn ? "checked" : "")>
+                    <label class="form-check-label" for="tradeInSwitch">Quiero cambiar mi equipo actual</label>
+                </div>
+
+                <div id="tradeInDetails" class="mt-3" style="display:none;">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Marca</label>
+                            <input class="form-control" name="Reservation.TradeInBrand"
+                                value="@Model.Reservation.TradeInBrand" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Modelo</label>
+                            <input class="form-control" name="Reservation.TradeInModel"
+                                value="@Model.Reservation.TradeInModel" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Condición</label>
+                            <select class="form-select" name="Reservation.TradeInCondition">
+                                <option value="">Select</option>
+                                @* <option @(Model.Reservation.TradeInCondition=="Excellent"?"selected":"")>Excellent</option>
+                                <option @(Model.Reservation.TradeInCondition=="Good"?"selected":"")>Good</option>
+                                <option @(Model.Reservation.TradeInCondition=="Fair"?"selected":"")>Fair</option> *@
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Valor estimado (MXN)</label>
+                            <input type="number" min="0" step="100" class="form-control"
+                                name="Reservation.EstimatedTradeInValue"
+                                value="@(Model.Reservation.EstimatedTradeInValue?.ToString() ?? "")" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Extended Coverage -->
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Garantía extendida</label>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="coverageSwitch"
+                        name="Reservation.ExtendedCoverage" @(Model.Reservation.ExtendedCoverage ? "checked" : "")>
+                    <label class="form-check-label" for="tradeInSwitch">Sí, quiero proteger mi equipo</label>
+                </div>
+                @* <div class="form-check">
+                    <input class="form-check-input" type="radio" name="Reservation.ExtendedCoverage" id="coverageYes"
+                        value="true" @(Model.Reservation.ExtendedCoverage ? "checked" : "")>
+                    <label class="form-check-label" for="coverageYes">Sí, quiero proteger mi equipo</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="Reservation.ExtendedCoverage" id="coverageNo"
+                        value="false" @(!Model.Reservation.ExtendedCoverage ? "checked" : "")>
+                    <label class="form-check-label" for="coverageNo">No, gracias</label>
+                </div> *@
+                @* <div class="btn-group" role="group" aria-label="Plan type">
+                    <input type="radio" class="btn-check" name="Reservation.PlanType" id="coverageYes" value="Unlocked"
+                        autocomplete="off" @(Model.Reservation.PlanType == PlanType.Unlocked ? "checked" : "")>
+                    <label class="btn btn-outline-primary" for="coverageYes">Yes</label>
+
+                    <input type="radio" class="btn-check" name="Reservation.PlanType" id="coverageNo"
+                        value="Contract24" @(Model.Reservation.PlanType == PlanType.Contract24 ? "checked" : "")>
+                    <label class="btn btn-outline-primary" for="coverageNo">No</label>
+                </div> *@
+                <span class="text-danger" asp-validation-for="Reservation.PlanType"></span>
+            </div>
+        </div>
+        <div class="row g-4 mt-3">
+            <!-- Cross-sell -->
+            <div class="col-12">
+                <label class="form-label fw-semibold">Agregar accesorios y wearables (opcional)</label>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h6 class="card-title">Smartwatch</h6>
+                                <p class="card-text small">Monitorea tu salud, mantente conectado y realiza pagos con NFC.
+                                </p>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="addWatch"
+                                        name="Reservation.AddSmartwatch" @(Model.Reservation.AddSmartwatch ? "checked" :
+                                                                                                                 "")>
+                                    <label class="form-check-label" for="addWatch">Agregar Smartwatch</label>
+                                </div>
+                                <label class="form-label">Cantidad</label>
+                                <input type="number" class="form-control" min="1"
+                                    value="@(Model.Reservation.SmartwatchQty ?? 1)" name="Reservation.SmartwatchQty">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h6 class="card-title">Wireless Buds</h6>
+                                <p class="card-text small">Sonido envolvente con ANC y batería para disfrutar por horas.</p>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="addBuds"
+                                        name="Reservation.AddBuds" @(Model.Reservation.AddBuds ? "checked" : "")>
+                                    <label class="form-check-label" for="addBuds">Agregar Wireless Buds</label>
+                                </div>
+                                <label class="form-label">Cantidad</label>
+                                <input type="number" class="form-control" min="1"
+                                    value="@(Model.Reservation.BudsQty ?? 1)" name="Reservation.BudsQty">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h6 class="card-title">Fast Charger</h6>
+                                <p class="card-text small">Adaptador de 45W con USB-C para carga rápida en esos momentos de urgencia.</p>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="addCharger"
+                                        name="Reservation.AddCharger" @(Model.Reservation.AddCharger ? "checked" : "")>
+                                    <label class="form-check-label" for="addCharger">Agregar Fast Charger</label>
+                                </div>
+                                <label class="form-label">Cantidad</label>
+                                <input type="number" class="form-control" min="1"
+                                    value="@(Model.Reservation.ChargerQty ?? 1)" name="Reservation.ChargerQty">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row g-4 mt-3">
+            <!-- Customer Info -->
+            <div class="col-12">
+                <h5 class="mb-3">Datos de contacto</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Reservation.FullName" class="form-label">Nombre</label>
+                        <input asp-for="Reservation.FullName" class="form-control" />
+                        <span class="text-danger" asp-validation-for="Reservation.FullName"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Reservation.Email" class="form-label">Email</label>
+                        <input asp-for="Reservation.Email" class="form-control" />
+                        <span class="text-danger" asp-validation-for="Reservation.Email"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Reservation.Phone" class="form-label">Teléfono</label>
+                        <input asp-for="Reservation.Phone" class="form-control" />
+                        <span class="text-danger" asp-validation-for="Reservation.Phone"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="col-12 d-flex gap-2">
+                <button type="submit" class="btn btn-secondary-dark">Reserva ahora</button>
+                <a class="btn btn-outline-secondary-dark" asp-page="./Index">Cancelar</a>
+            </div>
+        </div>
+
+        <!-- Benefits -->
+        <section class="mt-5">
+            <div class="p-4 rounded border bg-light">
+                <h5 class="mb-3">¿Por qué comprar con nosotros?</h5>
+                <ul class="mb-0">
+                    <li>Atención a clientes galardonada, disponible 24/7 en México.</li>
+                    <li>Bonos exclusivos por intercambio (trade-in) y descuentos de lealtad.</li>
+                    <li>Entrega rápida y segura, y fácil recolección en tienda.</li>
+                    <li>Financiamiento flexible con opciones claras de meses sin intereses.</li>
+                    <li>Cobertura extendida opcional con protección contra daños accidentales.</li>
+                </ul>
+            </div>
+        </section>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const tradeInSwitch = document.getElementById('tradeInSwitch');
+        const tradeInDetails = document.getElementById('tradeInDetails');
+        const payInstallments = document.getElementById('payInstallments');
+        const paySingle = document.getElementById('paySingle');
+        const installmentsDetails = document.getElementById('installmentsDetails');
+
+        function toggleTradeIn() {
+            tradeInDetails.style.display = tradeInSwitch.checked ? 'block' : 'none';
+        }
+        function toggleInstallments() {
+            const isInstallments = payInstallments.checked;
+            installmentsDetails.style.display = isInstallments ? 'block' : 'none';
+        }
+        toggleTradeIn();
+        toggleInstallments();
+        tradeInSwitch.addEventListener('change', toggleTradeIn);
+        [payInstallments, paySingle].forEach(el => el.addEventListener('change', toggleInstallments));
+    </script>
+}
