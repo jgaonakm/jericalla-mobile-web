@@ -1,21 +1,31 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Models;
+using Microsoft.Extensions.Options;
 
 
 
 public class ReservationsModel : PageModel
 {
     ILogger<ReservationsModel> _logger;
+    private readonly IConnectionFactory _connectionFactory;
 
-    public ReservationsModel(ILogger<ReservationsModel> logger)
+    private readonly IOptionsMonitor<RabbitOptions> _options;
+    private IConnection? _connection;
+    private IChannel? _channel;
+
+    public ReservationsModel(
+        IConnectionFactory connectionFactory,
+        IOptionsMonitor<RabbitOptions> options,
+        ILogger<ReservationsModel> logger)
     {
+        _connectionFactory = connectionFactory;
         _logger = logger;
+        _options = options;
     }
 
     [BindProperty]
@@ -37,6 +47,8 @@ public class ReservationsModel : PageModel
         };
 
         int customerId = id ?? 101; // Default to 101 if no ID is provided
+        Reservation.ClientId = customerId;
+
         string baseUrl = Environment.GetEnvironmentVariable("ACCOUNTS_API") ?? "http://localhost:5006";
         _logger.LogInformation("Base URL for API: {BaseUrl}", baseUrl);
         string apiUrl = $"{baseUrl}/api/v2/customer/{customerId}";
@@ -69,47 +81,50 @@ public class ReservationsModel : PageModel
     {
         LoadOptions();
 
-
-        if (Reservation.PaymentOption == PaymentOption.Installments && (Reservation.InstallmentMonths is null or <= 0))
-        {
-            ModelState.AddModelError("Reservation.InstallmentMonths", "Select the number of months.");
-        }
-
-        if (Reservation.HasTradeIn)
-        {
-            if (string.IsNullOrWhiteSpace(Reservation.TradeInBrand))
-                ModelState.AddModelError("Reservation.TradeInBrand", "Enter your current phone brand.");
-            if (string.IsNullOrWhiteSpace(Reservation.TradeInModel))
-                ModelState.AddModelError("Reservation.TradeInModel", "Enter your current phone model.");
-        }
-
         if (!ModelState.IsValid)
         {
             return Page();
         }
 
-        var factory = new ConnectionFactory { HostName = "localhost" };
-        using var connection = await factory.CreateConnectionAsync();
-        using var channel = await connection.CreateChannelAsync();
+        // var factory = new ConnectionFactory { HostName = "localhost" };
+        // using var connection = await factory.CreateConnectionAsync();
+        // using var channel = await connection.CreateChannelAsync();
+        _connection = await _connectionFactory.CreateConnectionAsync();
+        _channel = await _connection.CreateChannelAsync();
+ 
 
-        await channel.QueueDeclareAsync(
-            queue: "work-queue",
+        await _channel.QueueDeclareAsync(
+            queue: _options.CurrentValue.QueueName,
             durable: true,
             exclusive: false,
             autoDelete: false,
             arguments: null);
 
-        const string message = "Hello World!";
-        var body = Encoding.UTF8.GetBytes(message);
+        var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(Reservation));
 
-        await channel.BasicPublishAsync(exchange: string.Empty, routingKey: "hello", body: body);
-        _logger.LogInformation($" [x] Sent {message}");
+        //TODO: Add a correlation ID 
+        //Ref: https://www.rabbitmq.com/docs/publishers#message-properties
+        var properties = new BasicProperties
+        {
+            AppId = "commerce-web",
+            MessageId = Guid.NewGuid().ToString(),
+            Type = "shiny-phone-reservation",
+            DeliveryMode = DeliveryModes.Persistent,
+            ContentType = "application/json",
+            Timestamp = new AmqpTimestamp(DateTimeOffset.UtcNow.ToUnixTimeSeconds()),
+        };
 
-        // TODO: Persist reservation, send confirmation, etc.
-        TempData["Success"] = "Reservation received! We’ll contact you shortly.";
+        await _channel.BasicPublishAsync(
+            exchange: string.Empty,
+            routingKey: _options.CurrentValue.QueueName,
+            mandatory: true,
+            basicProperties: properties,
+            body: body);
+        _logger.LogInformation($" [x] Sent {properties.MessageId} to queue '{_options.CurrentValue.QueueName}'");
+
+
+        TempData["Success"] = "¡Tu reserva ha sido confirmada!";
         return RedirectToPage("./ReservationConfirmation", new { reservation = JsonSerializer.Serialize(Reservation) });
-
-        return Page();
     }
 
     private void LoadOptions()

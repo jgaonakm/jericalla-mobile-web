@@ -9,15 +9,11 @@ public class PhoneReservation
     [Required] public string? Color { get; set; }
 
     public bool HasTradeIn { get; set; }
-    public string? TradeInBrand { get; set; }
-    public string? TradeInModel { get; set; }
-    public string? TradeInCondition { get; set; }
     [Range(0, 200000)] public int? EstimatedTradeInValue { get; set; }
 
     public bool ExtendedCoverage { get; set; } = false;
 
     [Required] public PaymentOption PaymentOption { get; set; } = PaymentOption.Single;
-    [Range(1, 36)] public int? InstallmentMonths { get; set; }
 
     // Cross-sell
     public bool AddSmartwatch { get; set; }
@@ -28,6 +24,7 @@ public class PhoneReservation
     public int? ChargerQty { get; set; } = 1;
 
     // Customer
+    [Required] public int ClientId { get; set; }
     [Required, StringLength(100)] public string FullName { get; set; } = "";
     [Required, EmailAddress] public string Email { get; set; } = "";
     [Required, Phone] public string Phone { get; set; } = "";
