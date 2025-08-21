@@ -1,5 +1,6 @@
 using RabbitMQ.Client;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -20,6 +21,9 @@ services.AddSingleton<IConnectionFactory>(sp =>
     };
 });
 
+services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(@"."));
+
 var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
@@ -27,10 +31,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseAuthorization();
 app.MapRazorPages();
 
 app.Run();

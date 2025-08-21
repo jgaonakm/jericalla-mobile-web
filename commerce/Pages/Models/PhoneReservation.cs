@@ -9,8 +9,6 @@ public class PhoneReservation
     [Required] public string? Color { get; set; }
 
     public bool HasTradeIn { get; set; }
-    [Range(0, 200000)] public int? EstimatedTradeInValue { get; set; }
-
     public bool ExtendedCoverage { get; set; } = false;
 
     [Required] public PaymentOption PaymentOption { get; set; } = PaymentOption.Single;
@@ -31,7 +29,6 @@ public class PhoneReservation
 }
 
 public enum PlanType { Unlocked, Contract24 }
-// public enum StorageOption { GB256 = 256, GB512 = 512, TB1 = 1024 }
 public enum PaymentOption { Single, Installments }
 
 public record ColorOption(string Label, string Value, string Hex);

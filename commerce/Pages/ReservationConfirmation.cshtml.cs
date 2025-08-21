@@ -21,7 +21,6 @@ public class ReservationConfirmationModel : PageModel
         }
 
         // TODO: Save subscription to database or external newsletter service
-        TempData["SuccessMessage"] = "¡Gracias por suscribirte! Pronto recibirás nuestras novedades.";
         return RedirectToPage("./ReservationConfirmation");
     }
 }

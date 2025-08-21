@@ -86,9 +86,6 @@ public class ReservationsModel : PageModel
             return Page();
         }
 
-        // var factory = new ConnectionFactory { HostName = "localhost" };
-        // using var connection = await factory.CreateConnectionAsync();
-        // using var channel = await connection.CreateChannelAsync();
         _connection = await _connectionFactory.CreateConnectionAsync();
         _channel = await _connection.CreateChannelAsync();
  
@@ -122,8 +119,6 @@ public class ReservationsModel : PageModel
             body: body);
         _logger.LogInformation($" [x] Sent {properties.MessageId} to queue '{_options.CurrentValue.QueueName}'");
 
-
-        TempData["Success"] = "¡Tu reserva ha sido confirmada!";
         return RedirectToPage("./ReservationConfirmation", new { reservation = JsonSerializer.Serialize(Reservation) });
     }
 
